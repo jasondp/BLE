@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
@@ -29,10 +30,13 @@ import java.util.List;
 public class ConnectedDeviceActivity extends Activity {
 
     private String name, address, data;
-    private TextView nameTv, addressTv, stateTv, dataTv;
+    private TextView nameTv, addressTv, dataTv;
+    private Button stateTv;
     private ConnectedDeviceService mConnectedService;
+
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
+    private boolean mConnected = false;
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
             new ArrayList<>();
     private ExpandableListView mGattServicesList;
@@ -43,10 +47,12 @@ public class ConnectedDeviceActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case ConnectedDeviceService.ACTION_GATT_CONNECTED:
-                    stateTv.setText("connected");
+                    mConnected = false;
+                    stateTv.setText("disconnected");
                     break;
                 case ConnectedDeviceService.ACTION_GATT_DISCONNECTED:
-                    stateTv.setText("disconnected");
+                    stateTv.setText("connected");
+                    mConnected = true;
                     break;
                 case ConnectedDeviceService.ACTION_GATT_SERVICES_DISCOVERED:
                     List<BluetoothGattService> deviceAllService = mConnectedService.getDeviceAllService();
@@ -80,10 +86,18 @@ public class ConnectedDeviceActivity extends Activity {
         connectedDevice();
         nameTv = (TextView) findViewById(R.id.connected_device_name);
         addressTv = (TextView) findViewById(R.id.show_device_address);
-        stateTv = (TextView) findViewById(R.id.connected_device_state);
+        stateTv = (Button) findViewById(R.id.connected_device_state);
         dataTv = (TextView) findViewById(R.id.show_device_service_data);
         mGattServicesList = (ExpandableListView) findViewById(R.id.show_device_add_service);
         mGattServicesList.setOnChildClickListener(servicesListClickListener);
+        stateTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!mConnected) {
+                    connectedDevice();
+                }
+            }
+        });
 
     }
 

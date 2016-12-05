@@ -26,11 +26,12 @@
             android:textSize="18sp"
             />
 
-        <TextView
+        <Button
             android:id="@+id/connected_device_state"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textAllCaps="false"
             android:textSize="18sp"
             />
     </LinearLayout>

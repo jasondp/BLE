@@ -1,6 +1,5 @@
 package jason.com.bledemo;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,9 @@ import java.util.List;
 public class SearchAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<BluetoothDevice> list;
+    private List<SearchDeviceBean> list;
 
-    public SearchAdapter(Context context, List<BluetoothDevice> list) {
+    public SearchAdapter(Context context, List<SearchDeviceBean> list) {
         this.mContext = context;
         this.list = list;
 
@@ -52,7 +51,7 @@ public class SearchAdapter extends BaseAdapter {
 
         holder.name = (TextView) convertView.findViewById(R.id.name);
         holder.address = (TextView) convertView.findViewById(R.id.address);
-        BluetoothDevice device = list.get(position);
+        SearchDeviceBean device = list.get(position);
         if (device != null) {
             holder.name.setText(device.getName());
             holder.address.setText(device.getAddress());
