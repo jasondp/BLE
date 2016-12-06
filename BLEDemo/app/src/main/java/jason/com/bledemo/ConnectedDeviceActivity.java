@@ -110,7 +110,9 @@ public class ConnectedDeviceActivity extends Activity {
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-
+            if (mConnectedService != null && address != null) {
+                mConnectedService.connectDevice(address);
+            }
         }
     };
 
