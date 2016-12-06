@@ -82,9 +82,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
             if (saveSearchDeviceList.size() > 0) {
                 for (int position = 0; position < saveSearchDeviceList.size(); position++) {
-                    if (saveSearchDeviceList.get(position).getName().equals(bluetoothDevice.getName())) {
+                    String name = bluetoothDevice.getName();
+                    String address = bluetoothDevice.getAddress();
+                    if (name.equals(null)) {
+                        name = "";
+                    }
+                    if (saveSearchDeviceList.get(position).getName().equals(name)
+                            | saveSearchDeviceList.get(position).getAddress().equals(address)) {
                         break;
-                    }else{
+                    } else {
                         saveSearchDeviceList.add(bluetoothDevice);
                     }
                 }

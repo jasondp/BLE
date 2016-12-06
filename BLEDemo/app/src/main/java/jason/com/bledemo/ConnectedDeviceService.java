@@ -15,7 +15,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by boy on 2016/12/4.
@@ -37,8 +36,8 @@ public class ConnectedDeviceService extends Service {
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothDevice mRemoteDevice;
 
-    public final static UUID UUID_HEART_RATE_MEASUREMENT =
-            UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
+    //    public final static UUID UUID_HEART_RATE_MEASUREMENT =
+    //            UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
 
     @Nullable
     @Override
@@ -174,26 +173,14 @@ public class ConnectedDeviceService extends Service {
     private void sendBroadcastTellActivity(String actionDataAvailable, BluetoothGattCharacteristic characteristic) {
         Intent intent = new Intent(actionDataAvailable);
         /**
-         * 对比读取到的信道并且取到值数据
+         * 解析UUid并通过广播发送
          */
-        if (characteristic.getUuid().equals(UUID_HEART_RATE_MEASUREMENT)) {
-            int flag = characteristic.getProperties();
-            int format = -1;
-            if ((flag & 0x01) != 0) {
-                format = BluetoothGattCharacteristic.FORMAT_UINT16;
-            } else {
-                format = BluetoothGattCharacteristic.FORMAT_UINT8;
-            }
-            final int heartRate = characteristic.getIntValue(format, 1);
-            intent.putExtra(EXTRA_DATA, String.valueOf(heartRate));
-        } else {
-            final byte[] data = characteristic.getValue();
-            if (data != null && data.length > 0) {
-                final StringBuilder stringBuilder = new StringBuilder(data.length);
-                for (byte byteChar : data)
-                    stringBuilder.append(String.format("%02X ", byteChar));
-                intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
-            }
+        final byte[] data = characteristic.getValue();
+        if (data != null && data.length > 0) {
+            final StringBuilder stringBuilder = new StringBuilder(data.length);
+            for (byte byteChar : data)
+                stringBuilder.append(String.format("%02X ", byteChar));
+            intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
         }
         sendBroadcast(intent);
     }
@@ -216,14 +203,6 @@ public class ConnectedDeviceService extends Service {
             return;
         }
         bluetoothGatt.setCharacteristicNotification(characteristic, enabled);
-
-        // This is specific to Heart Rate Measurement.
-        if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
-            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
-                    UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
-            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            bluetoothGatt.writeDescriptor(descriptor);
-        }
     }
 
 

@@ -19,11 +19,10 @@ package jason.com.bledemo;
 import java.util.HashMap;
 
 /**
- * 这个是按照BLE 规范中定义的UUID自己项目中需要安照文档编写
+ * This class includes a small subset of standard GATT attributes for demonstration purposes.
  */
-public class SampleGattAttributes {
+public class UuidFilter {
     private static HashMap<String, String> attributes = new HashMap();
-    public static String HEART_RATE_MEASUREMENT = "00002a37-0000-1000-8000-00805f9b34fb";
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
 
     static {
@@ -31,7 +30,6 @@ public class SampleGattAttributes {
         attributes.put("0000180d-0000-1000-8000-00805f9b34fb", "Heart Rate Service");
         attributes.put("0000180a-0000-1000-8000-00805f9b34fb", "Device Information Service");
         // Sample Characteristics.
-        attributes.put(HEART_RATE_MEASUREMENT, "Heart Rate Measurement");
         attributes.put("00002a29-0000-1000-8000-00805f9b34fb", "Manufacturer Name String");
     }
 

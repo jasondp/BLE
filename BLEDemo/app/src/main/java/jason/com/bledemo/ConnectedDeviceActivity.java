@@ -130,12 +130,6 @@ public class ConnectedDeviceActivity extends Activity {
         unregisterReceiver(bluetoothListenerReceiver);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindService(myServiceConnection);
-    }
-
     public IntentFilter getDiverseFilter() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectedDeviceService.ACTION_GATT_CONNECTED);
@@ -161,24 +155,24 @@ public class ConnectedDeviceActivity extends Activity {
             HashMap<String, String> currentServiceData = new HashMap<>();
             uuid = gattService.getUuid().toString();
             currentServiceData.put(
-                    LIST_NAME, SampleGattAttributes.lookup(uuid, unknownServiceString));
+                    LIST_NAME, UuidFilter.lookup(uuid, unknownServiceString));
             currentServiceData.put(LIST_UUID, uuid);
             gattServiceData.add(currentServiceData);
 
             ArrayList<HashMap<String, String>> gattCharacteristicGroupData =
-                    new ArrayList<HashMap<String, String>>();
+                    new ArrayList<>();
             List<BluetoothGattCharacteristic> gattCharacteristics =
                     gattService.getCharacteristics();
             ArrayList<BluetoothGattCharacteristic> charas =
-                    new ArrayList<BluetoothGattCharacteristic>();
+                    new ArrayList<>();
 
             // Loops through available Characteristics.
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
                 charas.add(gattCharacteristic);
-                HashMap<String, String> currentCharaData = new HashMap<String, String>();
+                HashMap<String, String> currentCharaData = new HashMap<>();
                 uuid = gattCharacteristic.getUuid().toString();
                 currentCharaData.put(
-                        LIST_NAME, SampleGattAttributes.lookup(uuid, unknownCharaString));
+                        LIST_NAME, UuidFilter.lookup(uuid, unknownCharaString));
                 currentCharaData.put(LIST_UUID, uuid);
                 gattCharacteristicGroupData.add(currentCharaData);
             }
@@ -228,6 +222,13 @@ public class ConnectedDeviceActivity extends Activity {
                     return false;
                 }
             };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mConnectedService.close();
+        unbindService(myServiceConnection);
+    }
 
 
 }
