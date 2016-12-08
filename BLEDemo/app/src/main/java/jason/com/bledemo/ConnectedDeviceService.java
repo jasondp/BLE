@@ -36,9 +36,6 @@ public class ConnectedDeviceService extends Service {
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothDevice mRemoteDevice;
 
-    //    public final static UUID UUID_HEART_RATE_MEASUREMENT =
-    //            UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -95,7 +92,6 @@ public class ConnectedDeviceService extends Service {
                 bluetoothGatt.discoverServices();
                 sendBroadcastTellActivity(ACTION_GATT_CONNECTED);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-
                 sendBroadcastTellActivity(ACTION_GATT_DISCONNECTED);
             }
 

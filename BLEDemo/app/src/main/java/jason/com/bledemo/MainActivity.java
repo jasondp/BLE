@@ -15,7 +15,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity
+        implements AdapterView.OnItemClickListener, View.OnClickListener {
 
 
     private Button searchButton;
